@@ -3,10 +3,10 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Rango is going on!<br/>"
-                        "<a href='/rango/about'>About</a>")
+    context = {'boldmessage': 'Rango is going on!'}
+    return render(request, 'rango/index.html', context=context)
 
 
 def about(request):
-    return HttpResponse("Rango's about page<br/>"
-                        "<a href='/rango'>Index</a>")
+    context = {'creator': 'wangfp'}
+    return render(request, 'rango/about.html', context=context)
