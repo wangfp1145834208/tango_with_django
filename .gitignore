@@ -1,4 +1,4 @@
 *.pyc
-*.sql
+*.sqlite3
 *.gif
 *.jpg
