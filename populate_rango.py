@@ -5,6 +5,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE',
 import django
 django.setup()
 
+from random import randrange
+
 from rango.models import Category, Page
 
 
@@ -49,10 +51,10 @@ def populate():
             print('- {} - {}'.format(str(c), str(p)))
 
 
-def add_page(cat, title, url, views=0):
+def add_page(cat, title, url):
     p = Page.objects.get_or_create(category=cat, title=title)[0]
     p.url = url
-    p.views = views
+    p.views = randrange(100)
     p.save()
     return p
 
