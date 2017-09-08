@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from .models import Category, Page
-from .forms import CategoryForm
+from .forms import CategoryForm, PageForm
 
 
 def index(request):
@@ -22,7 +22,7 @@ def show_category(request, category_name_slug):
         context_dict['category'] = None
         context_dict['pages'] = None
     else:
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['category'] = category
         context_dict['pages'] = pages
 
@@ -43,7 +43,33 @@ def add_category(request):
 
     return render(request, 'rango/add_category.html', context={'form': form})
 
+def add_page(request, category_name_slug):
+    try:
+        cat = Category.objects.get(slug=category_name_slug)
+    except Category.DoesNotExist:
+        cat = None
+
+    form  = PageForm()
+
+    if request.method == 'POST':
+        form = PageForm(request.POST)
+
+        if form.is_valid():
+            if cat:
+                page = form.save(commit=False)
+                page.category = cat
+                page.save()
+                return show_category(request, category_name_slug)
+        else:
+            print(form.errors)
+
+    context_list = {'form': form, 'category': cat}
+    return render(request, 'rango/add_page.html', context=context_list)
+
+
 
 def about(request):
+    print(request.method)
+    print(request.user)
     context = {'creator': 'wangfp'}
     return render(request, 'rango/about.html', context=context)

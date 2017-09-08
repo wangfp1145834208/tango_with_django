@@ -1,0 +1,30 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Add New Page
+{% endblock %}
+
+{% block body %}
+    {% if category %}
+    <div>
+        <h1>Add a Page to Category '{{ category.name }}'</h1>
+        <div>
+            <form id="page_form" action="{% url 'rango:add_page' category.slug %}" method="post">
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                    {{ field.errors }}
+                    {{ field.help_text }}
+                    {{ field }}<br />
+                {% endfor %}
+                <input type="submit" name="submit" value="Create Page" />
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <strong>The specified category does not exist!</strong>
+    {% endif %}
+{% endblock %}
