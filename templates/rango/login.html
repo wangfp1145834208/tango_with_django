@@ -1,0 +1,23 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block body %}
+<div>
+    <h1>Login to Rango</h1>
+    <div style="color: red">
+    {% if error_msg %}
+        {{ error_msg }}
+    {% endif %}
+    </div>
+    <form id=login_form" method="post" action="{% url 'rango:login' %}">
+        {% csrf_token %}
+        Username: <input type="text" name="username" size="50" /><br />
+        Password: <input type="password" name="password" size="50" /><br />
+        <input type="submit" name="submit" value="Login" />
+    </form>
+</div>
+{% endblock %}
