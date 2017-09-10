@@ -2,6 +2,7 @@
 {% load staticfiles %}
 
 {% block body %}
+<div class="jumbotron">
     <h1>Rango says...
     <span>
         {% if user.is_authenticated %}
@@ -11,15 +12,16 @@
         {% endif %}
     </span>
     </h1>
+    <h3> visits: {{ visits }}</h3>
+</div>
 
-    <p> visits: {{ visits }}</p>
-
-    <div>
+<div class="row marketing">
+    <div class="col-lg-6">
+        <h4>Most Liked Categories</h4>
         {% if categories %}
-        <h1>Most Liked Categories</h1>
-        <ul>
+        <ul class="list-group">
             {% for category in categories %}
-            <li>
+            <li class="list-group-item">
                 <a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a>
             </li>
             {% endfor %}
@@ -28,18 +30,19 @@
             <strong>There are no category present.</strong>
         {% endif %}
     </div>
-    <div>
+    <div class="col-lg-6">
+        <h4>Most Viewed Pages</h4>
         {% if pages %}
-        <h1>Most Viewed Pages</h1>
-        <ul>
+        <ul class="list-group">
             {% for page in pages %}
-            <li><a href="{{ page.url }}">{{ page.title }} ({{ page.views }} viewed)</a></li>
+            <li class="list-group-item"><a href="{{ page.url }}">{{ page.title }} ({{ page.views }} viewed)</a></li>
             {% endfor %}
         </ul>
         {% else %}
             <strong>There are no page yet.</strong>
         {% endif %}
     </div>
+</div>
     <div>
         <img src="{% static 'images/rango.gif' %}" />
     </div>
