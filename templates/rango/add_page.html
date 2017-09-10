@@ -8,21 +8,21 @@
 {% block body %}
     {% if category %}
     <div>
-        <h1>Add a Page to Category '{{ category.name }}'</h1>
-        <div>
-            <form id="page_form" action="{% url 'rango:add_page' category.slug %}" method="post">
-                {% csrf_token %}
-                {% for hidden in form.hidden_fields %}
-                    {{ hidden }}
-                {% endfor %}
-                {% for field in form.visible_fields %}
-                    {{ field.errors }}
-                    {{ field.help_text }}
-                    {{ field }}<br />
-                {% endfor %}
-                <input type="submit" name="submit" value="Create Page" />
-            </form>
-        </div>
+        <form role="form" id="page_form" action="{% url 'rango:add_page' category.slug %}" method="post">
+        <h2 class="form-signin-heading">
+            <a href="{% url 'rango:show_category' category.slug %}">Add a Page to {{ category.name }}</a>
+        </h2>
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}<br />
+                {{ field }}<br />
+            {% endfor %}
+            <button class="btn btn-primary" type="submit" name="submit">Add Page</button>
+        </form>
     </div>
     {% else %}
     <strong>The specified category does not exist!</strong>
