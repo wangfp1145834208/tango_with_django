@@ -10,19 +10,21 @@
 <div class="jumbotron">
     <h1 class="display-3">Log In</h1>
 </div>
-    <form class="form-signin" method="post" action=".">
+
+    <form class="form-signin" role="form" method="post" action=".">
         {% csrf_token %}
         <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
+        <label for="id_username" class="sr-only">Username</label>
         <input type="text" name="username" id="id_username" class="form-control"
                placeholder="Username" required autofocus />
-        <label for="inputPssword" class="sr-only">Password</label>
+        <label for="id_password" class="sr-only">Password</label>
         <input type="password" name="password" id="id_password" class="form-control"
                placeholder="Password" required />
         <button class="btn btn-lg btn-primary btn-block" type="submit"
                 value="Submit">Sign In</button>
         <input type="hidden" name="next" value="{{ next }}" />
     </form>
+
     <p>
         Not a memeber?
         <a href="{% url 'registration_register' %}">Register</a>

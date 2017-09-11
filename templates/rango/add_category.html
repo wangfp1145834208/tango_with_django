@@ -6,11 +6,14 @@
 {% endblock %}
 
 {% block body %}
+    <div class="jumbotron">
+        <h1>Add a New Category</h1>
+    </div>
     <div>
         <form role="form" action="{% url 'rango:add_category' %}" id="category_form" method="post">
-            <h2 class="form-signin-heading">
-                Add a New Category
-            </h2>
+            <h4 class="form-signin-heading">
+                Add New Category Here
+            </h4>
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}

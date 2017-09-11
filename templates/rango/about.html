@@ -6,9 +6,12 @@
 {% endblock %}
 
 {% block body %}
+<div class="jumbotron">
     <h1>This tutorial has been put together by
         <strong>{{ creator }}</strong>
     </h1>
-    <p>visits: {{ visits }}</p>
+    <h4>visits: {{ visits }}</h4>
+</div>
+
     <img src="{{ MEDIA_URL }}cn.gif" alt="flag"><br />
 {% endblock %}
