@@ -1,0 +1,30 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Complete Profile
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron">
+    <h1>Complete Your Profile</h1>
+</div>
+
+{% if submitted %}
+    <p class="text-success">You have submit successfully! <a href="{% url 'rango:profile' user.username %}">Profile</a></p>
+{% endif %}
+
+        <form role="form" method="post" action="{% url 'rango:register_profile' %}"
+              class="form-horizontal" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+            <label for="website" class="control-label">Website</label>
+            <input type="text" class="form-control" name="website"
+                       placeholder="website" id="Website" maxlength="30" />
+            <label for="picture" class="control-label">Picture</label>
+            <input type="file" class="form-control" name="picture" id="picture" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+{% endblock %}

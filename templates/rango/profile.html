@@ -1,0 +1,48 @@
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block body %}
+{% if user_profile %}
+    <div class="jumbotron">
+        <h1>{{ user_profile.user.username }}'s Profile</h1>
+    </div>
+    <div class="row marketing">
+        <div class="col-md-6 ">
+            <div class="thumbnail">
+                {% if user_profile.picture %}
+                    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}" />
+                {% else %}
+                    <img src="{{ MEDIA_URL }}default.gif" />
+                {% endif %}
+                <h5><span class="text-info">Username</span>: {{ user_profile.user.username }}</h5>
+                <h5><span class="text-info">Email</span>: {{ user_profile.user.email }}</h5>
+                <h5><span class="text-info">Website</span>:
+                    {% if user_profile.website %}
+                    {{ user_profile.website }}
+                    {% endif %}
+                </h5>
+            </div>
+        </div>
+    </div>
+    <hr />
+    {% if true_user == 2 %}
+    <div>
+        <a href="{% url 'rango:register_profile' %}" class="btn btn-primary"
+           role="button">Edit Profile</a>
+    </div>
+    {% endif %}
+{% else %}
+    <hr />
+    {% if true_user == 1 %}
+    <h2><a class="text-warning" href="{% url 'rango:register_profile' %}">
+        Please Complete Your Profile!
+    </a></h2>
+    {% elif true_user == 0 %}
+    <h2 class="text-warning">User Doesn't Exist!</h2>
+    {% endif %}
+{% endif %}
+{% endblock %}

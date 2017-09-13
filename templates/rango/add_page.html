@@ -7,11 +7,13 @@
 
 {% block body %}
     {% if category %}
+    <hr />
     <div>
         <form role="form" id="page_form" action="{% url 'rango:add_page' category.slug %}" method="post">
         <h2 class="form-signin-heading">
             <a href="{% url 'rango:show_category' category.slug %}">Add a Page to {{ category.name }}</a>
         </h2>
+            <div class="form-group">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
@@ -21,6 +23,7 @@
                 {{ field.help_text }}<br />
                 {{ field }}<br />
             {% endfor %}
+            </div>
             <button class="btn btn-primary" type="submit" name="submit">Add Page</button>
         </form>
     </div>
