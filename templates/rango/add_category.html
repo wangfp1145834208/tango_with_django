@@ -14,6 +14,7 @@
             <h4 class="form-signin-heading">
                 Add New Category Here
             </h4>
+            <div class="form-group">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
@@ -23,6 +24,7 @@
                 {{ field.help_text }}<br />
                 {{ field }}<br />
             {% endfor %}
+            </div>
             <button class="btn btn-primary" type="submit" name="submit">Add Category</button>
         </form>
     </div>

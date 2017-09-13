@@ -1,12 +1,13 @@
 from datetime import datetime
 
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
-from django.core.urlresolvers import reverse
+from django.shortcuts import render, reverse, redirect
+# from django.http import HttpResponse, HttpResponseRedirect
+# from django.contrib.auth import authenticate, login, logout
+# from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
-from .models import Category, Page
+from .models import Category, Page, UserProfile
 from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 
@@ -27,8 +28,8 @@ from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
 #     response.set_cookie('visits', visits)
 
 
-'''将信息储存在服务端的session中'''
 def get_server_side_cookie(request, cookie, default_val=None):
+    """将信息储存在服务端的session中"""
     val = request.session.get(cookie)
     if not val:
         val = default_val
@@ -53,11 +54,9 @@ def visitor_cookie_handler(request):
 
 def index(request):
     # request.session.set_test_cookie()
-    category_list = Category.objects.order_by('-likes')[:5]
-    page_list = Page.objects.order_by('-views')[:5]
-    context = {'categories': category_list,
-               'pages': page_list,
-               }
+    context = {}
+    context['categories'] = Category.objects.order_by('-likes')[:5]
+    context['pages'] = Page.objects.order_by('-views')[:5]
     visitor_cookie_handler(request)
     context['visits'] = request.session.get('visits')
 
@@ -103,7 +102,7 @@ def add_page(request, category_name_slug):
     except Category.DoesNotExist:
         cat = None
 
-    form  = PageForm()
+    form = PageForm()
 
     if request.method == 'POST':
         form = PageForm(request.POST)
@@ -181,6 +180,80 @@ def add_page(request, category_name_slug):
 @login_required
 def restricted(request):
     return render(request, 'rango/restricted.html')
+
+
+def track_url(request):
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+            except Page.DoesNotExist:
+                return redirect('/rango/')
+            else:
+                page.views = page.views + 1
+                page.save()
+                return redirect(page.url)
+
+    return redirect('/rango/')
+
+
+@login_required
+def register_profile(request):
+    submitted = False
+    if request.method == 'POST':
+        user = request.user   # 用户相关信息保存在request.user中
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            user_profile = UserProfile(user=user)
+        if request.POST['website']:
+            user_profile.website = request.POST['website']
+            print('submit')
+            submitted = True
+        if 'picture' in request.FILES:
+            user_profile.picture = request.FILES['picture']
+            print('picture')
+            submitted = True
+        user_profile.save()
+
+    return render(request, 'rango/profile_registration.html', {'submitted': submitted})
+
+
+@login_required
+def profile(request, username):
+    true_user = 0
+    context = {}
+    try:
+        user_query = User.objects.get(username=username)
+        user_profile = UserProfile.objects.get(user=user_query)
+    except User.DoesNotExist:
+        pass
+    except UserProfile.DoesNotExist:
+        user = request.user
+        if user == user_query:
+            true_user = 1
+    else:
+        context['user_profile'] = user_profile
+        user = request.user
+        if user == user_query:
+            true_user = 2
+
+    context['true_user'] = true_user
+    return render(request, 'rango/profile.html', context=context)
+
+
+@login_required
+def show_profile(request):
+    context = {}
+    try:
+        users = User.objects.all().order_by('username')
+    except User.DoesNotExist:
+        pass
+    else:
+        context['users'] = users
+
+    return render(request, 'rango/profile_show.html', context)
 
 
 def about(request):

@@ -17,13 +17,14 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+from django.shortcuts import reverse
 from registration.backends.simple.views import RegistrationView
 
 
 class MyRegistrationView(RegistrationView):
 
     def get_success_url(self, user):
-        return '/rango/'
+        return reverse('rango:register_profile')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
